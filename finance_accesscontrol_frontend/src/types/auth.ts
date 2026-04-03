@@ -1,8 +1,10 @@
-export enum Role {
-  VIEWER = 'VIEWER',
-  ANALYST = 'ANALYST',
-  ADMIN = 'ADMIN'
-}
+export const Role = {
+  VIEWER: 'VIEWER',
+  ANALYST: 'ANALYST',
+  ADMIN: 'ADMIN'
+} as const;
+
+export type Role = typeof Role[keyof typeof Role];
 
 export interface User {
   id: string;

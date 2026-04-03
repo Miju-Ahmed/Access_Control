@@ -8,6 +8,23 @@ A scalable and well-structured backend system for managing financial records, us
 
 This system allows different types of users to interact with financial data based on their roles. It provides APIs for managing users, financial records, and generating summary analytics for dashboards.
 
+## 🖼️ Dashboard Preview
+
+<div align="center">
+  <img src="Images/dashboard.png" alt="Dashboard Overview" width="800" />
+  <p><i>Real-time Dashboard Analytics with dynamic charts and metrics.</i></p>
+  
+  <br/>
+  
+  <img src="Images/record.png" alt="Records List" width="800" />
+  <p><i>Comprehensive Financial Records Management with search and filtering.</i></p>
+  
+  <br/>
+  
+  <img src="Images/users.png" alt="User Management" width="800" />
+  <p><i>Advanced User and Role Management for granular access control.</i></p>
+</div>
+
 ---
 
 ## 🚀 Features
@@ -99,12 +116,21 @@ Implemented using middleware/guards to restrict unauthorized actions.
 
 ## 🛠️ Tech Stack
 
-> *(Update based on your implementation)*
+### Frontend
+- **Framework**: [Vite](https://vitejs.dev/) + [React 19](https://react.dev/)
+- **State Management**: [TanStack Query v5](https://tanstack.com/query/latest) (React Query)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/) + [Shadcn UI](https://ui.shadcn.com/)
+- **Animations**: [Framer Motion](https://www.framer.com/motion/)
+- **Forms**: [React Hook Form](https://react-hook-form.com/) + [Zod](https://zod.dev/)
+- **Icons**: [Lucide React](https://lucide.dev/)
 
-- Backend: Node.js / Spring Boot
-- Database: PostgreSQL / MySQL / SQLite
-- ORM: Prisma / TypeORM / Hibernate
-- Authentication: JWT
+### Backend (System Target)
+- **Language**: [Java 21+](https://www.oracle.com/java/)
+- **Framework**: [Spring Boot 3.4.4](https://spring.io/projects/spring-boot)
+- **Database**: [MySQL](https://www.mysql.com/) / [H2](https://www.h2database.com/) (Dev)
+- **Security**: [Spring Security](https://spring.io/projects/spring-security) + [JWT](https://jwt.io/)
+- **ORM**: [Spring Data JPA](https://spring.io/projects/spring-data-jpa) (Hibernate)
+
 
 ---
 

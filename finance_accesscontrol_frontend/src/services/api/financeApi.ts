@@ -1,49 +1,84 @@
-import { axiosClient } from './axiosClient';
-import { Transaction, DashboardMetrics } from '../../types/finance';
+import { type Transaction, type DashboardMetrics } from '../../types/finance';
 
-// Mock Data
+// Mock Data State
 let mockTransactions: Transaction[] = [
   { id: '1', amount: 5000, category: 'Salary', type: 'income', date: '2023-10-01' },
   { id: '2', amount: 200, category: 'Groceries', type: 'expense', date: '2023-10-02' },
   { id: '3', amount: 50, category: 'Utilities', type: 'expense', date: '2023-10-05' },
+  { id: '4', amount: 1200, category: 'Freelance', type: 'income', date: '2023-10-10' },
+  { id: '5', amount: 150, category: 'Dining', type: 'expense', date: '2023-10-12' },
 ];
 
-export const getTransactions = async (): Promise<Transaction[]> => {
-  // const { data } = await axiosClient.get<Transaction[]>('/finance/transactions');
-  // return data;
-  return new Promise((resolve) => setTimeout(() => resolve([...mockTransactions]), 500));
-};
+const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
-export const getDashboardMetrics = async (): Promise<DashboardMetrics> => {
-  // const { data } = await axiosClient.get<DashboardMetrics>('/finance/metrics');
-  // return data;
-  return new Promise((resolve) => setTimeout(() => {
-    resolve({
-      totalIncome: 5000,
-      totalExpenses: 250,
-      netBalance: 4750,
-      categoryBreakdown: [
-        { category: 'Groceries', amount: 200 },
-        { category: 'Utilities', amount: 50 },
-      ],
-      monthlyTrends: [
-        { month: 'Jan', income: 4000, expenses: 2400 },
-        { month: 'Feb', income: 3000, expenses: 1398 },
-        { month: 'Mar', income: 2000, expenses: 9800 },
-        { month: 'Apr', income: 2780, expenses: 3908 },
-        { month: 'May', income: 1890, expenses: 4800 },
-        { month: 'Jun', income: 2390, expenses: 3800 },
-        { month: 'Jul', income: 3490, expenses: 4300 },
-      ],
-      recentTransactions: mockTransactions.slice(0, 5)
-    });
-  }, 500));
+export const getTransactions = async (): Promise<Transaction[]> => {
+  await delay(600);
+  return [...mockTransactions].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 };
 
 export const createTransaction = async (transaction: Omit<Transaction, 'id'>): Promise<Transaction> => {
-  return new Promise((resolve) => setTimeout(() => {
-    const newTx = { ...transaction, id: Math.random().toString(36).substring(7) };
-    mockTransactions.push(newTx);
-    resolve(newTx);
-  }, 500));
+  await delay(800);
+  const newTx = { ...transaction, id: Math.random().toString(36).substring(7) };
+  mockTransactions = [newTx, ...mockTransactions];
+  return newTx;
+};
+
+export const updateTransaction = async (data: { id: string } & Partial<Transaction>): Promise<Transaction> => {
+  await delay(800);
+  let updatedTx: Transaction | undefined;
+  mockTransactions = mockTransactions.map(tx => {
+    if (tx.id === data.id) {
+      updatedTx = { ...tx, ...data };
+      return updatedTx;
+    }
+    return tx;
+  });
+  if (!updatedTx) throw new Error('Transaction not found');
+  return updatedTx;
+};
+
+export const deleteTransaction = async (id: string): Promise<void> => {
+  await delay(600);
+  mockTransactions = mockTransactions.filter(tx => tx.id !== id);
+};
+
+export const getDashboardMetrics = async (): Promise<DashboardMetrics> => {
+  await delay(800);
+  
+  const totalIncome = mockTransactions
+    .filter(t => t.type === 'income')
+    .reduce((sum, t) => sum + t.amount, 0);
+    
+  const totalExpenses = mockTransactions
+    .filter(t => t.type === 'expense')
+    .reduce((sum, t) => sum + t.amount, 0);
+
+  const categoryMap: Record<string, number> = {};
+  mockTransactions
+    .filter(t => t.type === 'expense')
+    .forEach(t => {
+      categoryMap[t.category] = (categoryMap[t.category] || 0) + t.amount;
+    });
+
+  const categoryBreakdown = Object.entries(categoryMap).map(([category, amount]) => ({
+    category,
+    amount
+  }));
+
+  // Simple static monthly trends for now, could be dynamic later
+  const monthlyTrends = [
+    { month: 'Jan', income: 4000, expenses: 2400 },
+    { month: 'Feb', income: 3000, expenses: 1398 },
+    { month: 'Mar', income: 2000, expenses: 9800 },
+    { month: 'Oct', income: totalIncome, expenses: totalExpenses },
+  ];
+
+  return {
+    totalIncome,
+    totalExpenses,
+    netBalance: totalIncome - totalExpenses,
+    categoryBreakdown,
+    monthlyTrends,
+    recentTransactions: mockTransactions.slice(0, 5)
+  };
 };

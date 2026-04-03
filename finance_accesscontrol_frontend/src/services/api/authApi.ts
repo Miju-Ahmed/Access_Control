@@ -1,5 +1,5 @@
-import { axiosClient } from './axiosClient';
-import { AuthResponse, Role } from '../../types/auth';
+// import { axiosClient } from './axiosClient';
+import { type AuthResponse, Role } from '../../types/auth';
 
 export const login = async (credentials: { email: string; password: string }): Promise<AuthResponse> => {
   // Uncomment below to use actual backend API
